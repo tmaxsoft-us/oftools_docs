@@ -15,11 +15,11 @@ option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT
 
 [ofcob?rw]
 $OF_COMPILE_IN=$OF_COMPILE_BASE.cob
-option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g --enable-core --enable-rw $OF_COMPILE_IN
+option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g --enable-rw $OF_COMPILE_IN
 
 [ofcob] 
 $OF_COMPILE_IN=$OF_COMPILE_BASE.cob
-option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g --enable-core $OF_COMPILE_IN
+option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g $OF_COMPILE_IN
 
 [deploy]
 file    = $OF_COMPILE_BASE.so
