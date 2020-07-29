@@ -1,0 +1,23 @@
+[setup]
+#workdir = /opt/tmaxapp/compile
+workdir = $COMPILE_WORK_DIR
+
+# declare environment variables
+
+# declare filter variables
+?cics = grep -avE '^\*|^\.\*' $OF_COMPILE_IN | grep -aE 'EXEC\s\s*CICS'
+
+
+# Preprocessing & Assembly in a single execution
+[ofasm?cics]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmo
+option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OFASM_MACLIB --enable-cics
+
+[ofasm]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmo
+option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OFASM_MACLIB
+
+
+[deploy]
+file = $OF_COMPILE_BASE.so
+dataset = SYS1.USERLIB 
