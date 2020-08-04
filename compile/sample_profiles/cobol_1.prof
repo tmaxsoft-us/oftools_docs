@@ -1,5 +1,6 @@
 [setup]
-workdir = /opt/tmaxapp/compile
+#workdir = /opt/tmaxapp/compile
+workdir = $COMPILE_WORK_DIR
 
 # declare environment variables
 $OFCOBCPY = /opt/tmaxapp/OFCOBOL/copybook
@@ -7,23 +8,21 @@ $OFCOBCPY = /opt/tmaxapp/OFCOBOL/copybook
 # declare filter variables
 ?rw = grep -av '^......\*' $OF_COMPILE_IN | grep -a 'REPORT' | grep -a SECTION | grep -av '-'
 
-
 [ofcbpp?rw]
 option = --enable-rw -i $OF_COMPILE_IN -o $OF_COMPILE_OUT
 
 [ofcbpp]
 option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT
 
-
 [ofcob?rw]
 $OF_COMPILE_IN=$OF_COMPILE_BASE.cob
-option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g --enable-rw $OF_COMPILE_IN
+option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -u -g --ptr-redef -O0 --enable-ofasm --notrunc --check-index --enable-rw
 
 [ofcob] 
 $OF_COMPILE_IN=$OF_COMPILE_BASE.cob
-option = -U -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee --ptr-redef -O0 --enable-ofasm --notrunc --check-index -g $OF_COMPILE_IN
-
+option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -U -g --ptr-redef -O0 --enable-ofasm --notrunc --check-index
 
 [deploy]
 file = $OF_COMPILE_BASE.so
 dataset = SYS1.USERLIB
+#region = OSCOIVP1

@@ -2,16 +2,16 @@
 #workdir = /opt/tmaxapp/compile
 workdir = $COMPILE_WORK_DIR
 
-# declare environment variables
+# declare environment variable
 
 # declare filter variables
 
-
 [gcc]
 $OF_COMPILE_OUT = $OF_COMPILE_BASE.so
-option = -Wall -g -v -fPIC -shared -o $OF_COMPILE_OUT $OF_COMPILE_IN 
-
+option = -Wall -g -v -fPIC -shared -trigraphs -I${GIT_HOME}/src/INCLUDE -o $OF_COMPILE_OUT $OF_COMPILE_IN 
+#option = -Wall -g -v -fPIC -shared -trigraphs -Ddig="unsigned char" -o $OF_COMPILE_OUT $OF_COMPILE_IN 
 
 [deploy]
 file = $OF_COMPILE_BASE.so
-dataset = SYS1.USERLIB 
+dataset = SYS1.USERLIB
+#region = OSCOIVP1 

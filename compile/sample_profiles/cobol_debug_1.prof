@@ -2,42 +2,39 @@
 #workdir = /opt/tmaxapp/compile
 workdir = $COMPILE_WORK_DIR
 
-# declare environment variables
-$OFCOBCPY = /opt/tmaxapp/OFCOBOL/copybook
+# declare environment variable
+$OFCOBCPY = /opt/tmaxdb/tibero6/client/include:/opt/tmaxapp/ofcobol/copybook:/opt/tmaxapp/OpenFrame/osc/copybook:/opt/tmaxapp/OpenFrame/osc/region/OSCOIVP1/map/symbolic:/opt/git_repository/COPYBOOK
 
 # declare filter variables
-?cics = grep -av '^......\*' $OF_COMPILE_IN | grep -aE 'EXEC\s\s*CICS|USING\s\s*DFHEIBLK|USING\s\s*DFHCOMMAREA'
 ?rw = grep -av '^......\*' $OF_COMPILE_IN | grep -a 'REPORT' | grep -aE 'SECTION|ARE' | grep -av '-'
-?sql = grep -av '^......\*' $OF_COMPILE_IN | grep -aE 'EXEC\s\s*SQL'
 
+[ofcbpp?rw]
+option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --add-miss-period --conv-stop-run --enable-declare -copypath /opt/git_repository/src/COPYBOOK --enable-rw
+?cics = grep -av '^......\*' $OF_COMPILE_OUT | grep -aE 'EXEC\s\s*CICS|USING\s\s*DFHEIBLK|USING\s\s*DFHCOMMAREA'
+?sql = grep -av '^......\*' $OF_COMPILE_OUT | grep -aE 'EXEC\s\s*SQL'
+
+[ofcbpp]
+option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --add-miss-period --conv-stop-run --enable-declare -copypath /opt/git_repository/src/COPYBOOK
+?cics = grep -av '^......\*' $OF_COMPILE_OUT | grep -aE 'EXEC\s\s*CICS|USING\s\s*DFHEIBLK|USING\s\s*DFHCOMMAREA'
+?sql = grep -av '^......\*' $OF_COMPILE_OUT | grep -aE 'EXEC\s\s*SQL'
 
 [osccblpp?cics]
 option = $OF_COMPILE_IN -o $OF_COMPILE_OUT
 
-
 [tbpcb?sql]
 option = INAME=$OF_COMPILE_IN ONAME=$OF_COMPILE_OUT INCLUDE=$COPY_HOME END_OF_FETCH=100 COMP5=NO CODE=COBOL UNSAFE_NULL=YES VARCHAR=YES IGNORE_ERROR=YES DB2_SYNTAX=YES
 
-
-[ofcbpp?rw]
-$OF_COMPILE_OUT = $OF_COMPILE_BASE.cbl
-option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --add-miss-period --conv-stop-run --enable-declare -copypath /opt2/gitrepo/src/COPYBOOK --enable-rw
-
-[ofcbpp]
-$OF_COMPILE_OUT = $OF_COMPILE_BASE.cbl
-option = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --add-miss-period --conv-stop-run --enable-declare -copypath /opt2/gitrepo/src/COPYBOOK
-
+[cp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+option = $OF_COMPILE_IN $OF_COMPILE_OUT
 
 [ofcob?rw]
-$OF_COMPILE_IN = $OF_COMPILE_BASE.cbl
 option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -lcicsexci -L$OPENFRAME_HOME/lib/PSIGSFC.so -L$OPENFRAME_HOME/lib/ILBOABN0.so -L$OPENFRAME_HOME/core/lib64 -L$OFCOB_HOME/lib -lcli -U --enable-cbltdli --save-temps --ptr-redef --notrunc --enable-debug --enable-rw
 
 [ofcob] 
-$OF_COMPILE_IN = $OF_COMPILE_BASE.cbl
 option = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$ODBC_HOME/lib -lodbc -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -lcicsexci -L$OPENFRAME_HOME/lib/PSIGSFC.so -L$OPENFRAME_HOME/lib/ILBOABN0.so -L$OPENFRAME_HOME/core/lib64 -L$OFCOB_HOME/lib -lcli -U --enable-cbltdli --save-temps --ptr-redef --notrunc --enable-debug
-
 
 [deploy]
 file = $OF_COMPILE_BASE.so
 dataset = SYS1.USERLIB
-region = SERATEST
+#region = OSCOIVP1

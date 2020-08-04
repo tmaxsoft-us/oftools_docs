@@ -1,0 +1,28 @@
+[setup]
+#workdir = /opt/tmaxapp/compile
+workdir = $COMPILE_WORK_DIR
+
+# declare environment variable
+
+# declare filter variables
+?entry = grep -aE 'OFASM_VM_ENTRY' $OF_COMPILE_IN
+?exit = grep -aE 'OFASM_VM_EXIT' $OF_COMPILE_IN
+?load = grep -aE 'OFASM_VM_LOAD' $OF_COMPILE_IN
+$pgm = `echo $OF_COMPILE_IN | cut -d'_' -f 1`
+
+[g++?entry]
+$OF_COMPILE_OUT = ${pgm}.so
+option = $OF_COMPILE_IN -g -o $OF_COMPILE_OUT -fPIC -shared -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
+
+[g++?exit]
+$OF_COMPILE_OUT = ${pgm}_VM_EXIT.so
+option = $OF_COMPILE_IN -g -o $OF_COMPILE_OUT -fPIC -shared -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
+
+[g++?load]
+$OF_COMPILE_OUT = ${pgm}_VM_LOAD.so
+option = $OF_COMPILE_IN -g -o $OF_COMPILE_OUT -fPIC -shared -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
+
+[deploy]
+file = $OF_COMPILE_IN
+dataset = SYS1.USERLIB 
+#region = OSCOIVP1
