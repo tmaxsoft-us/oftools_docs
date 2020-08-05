@@ -153,6 +153,8 @@ See below example with the tag **test**:
 
 ![alt-text](../reference_images/oftools_compile_grouping.png)
 
+When you compile multiple programs at the same time using a directory as a source parameter, it is recommended to specify the language used in the **tag** option for tracking purposes. If all programs in your directory are COBOL programs, you should specify a tag like `COBOL_username` for instance. 
+
 ### 4.4 Report File
 
 The report file is formatted as a csv or a comma delimitted file that displays: 
