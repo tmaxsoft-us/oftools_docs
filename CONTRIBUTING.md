@@ -66,17 +66,17 @@ Why: ...
 - Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 - Limit the first line to 72 characters or less
 - Consider starting the commit message with an applicable emoji:
-  - 🎨 :art: when improving the format/structure of the code
-  - 🐎 :racehorse: when improving performance
-  - 🚱 :non-potable_water: when plugging memory leaks
-  - 📝 :memo: when writing docs
-  - 🐧 :penguin: when fixing something on Linux
-  - 🐛 :bug: when fixing a bug
-  - 🔥 :fire: when removing code or files
-  - ✅ :white_check_mark: when adding tests
-  - 🔒 :lock: when dealing with security
-  - ⬆️ :arrow_up: when upgrading dependencies
-  - ⬇️ :arrow_down: when downgrading dependencies
+  - 🎨: when improving the format/structure of the code
+  - 🐎: when improving performance
+  - 🚱: when plugging memory leaks
+  - 📝: when writing docs
+  - 🐧: when fixing something on Linux
+  - 🐛: when fixing a bug
+  - 🔥: when removing code or files
+  - ✅: when adding tests
+  - 🔒: when dealing with security
+  - ⬆️: when upgrading dependencies
+  - ⬇️: when downgrading dependencies
 
 These are only a few examples, please find the full list of compatible emojis and their meaning [here](https://gitmoji.dev/).
 
