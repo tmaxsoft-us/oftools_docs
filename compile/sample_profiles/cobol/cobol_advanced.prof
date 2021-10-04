@@ -1,0 +1,94 @@
+[setup]
+workdir = $COMPILE_WORK_DIR
+#workdir = /opt/tmaxapp/compile
+#workdir = /opt/tmaxapp/compile/cobol
+#mandatory = dos2unix:ofcbpp:ofcob
+
+# Environment variables
+$SOURCECPY = /opt/source/copybook
+$OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/COPYBOOK.COMMON:$SOURCECPY/COPYBOOK.CICS:$SOURCECPY/COPYBOOK.DDL:$SOURCECPY/COPYBOOK.UPDATED:$SOURCECPY/MSTR.COPYLIB:$SOURCECPY/COPYBOOK.MSTRTSS:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTR:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTRBDS
+
+# Filter variables
+
+# If you want to manually test the filters, you can add to the first grep the
+# following options: -nH --color=always
+?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
+?day_of_week = grep -a "FROM DAY-OF-WEEK" $OF_COMPILE_IN
+?online = grep -av "^......\*" $OF_COMPILE_BASE.ofcbpp | grep -a "EXEC.*CICS"
+?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
+?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
+?title = grep -av "^......\*" $OF_COMPILE_IN | grep -a " TITLE '"
+
+#=====#
+
+[dos2unix]
+$OF_COMPILE_OUT= $OF_COMPILE_IN
+args = $OF_COMPILE_IN
+
+#---
+
+[python3]
+args = check_copy.py $OF_COMPILE_IN $OF_COMPILE_OUT
+
+#---
+
+[ofcbpp?title]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare
+
+[ofcbpp?rw]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare --enable-osvs --enable-rw
+
+[ofcbpp]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare --enable-osvs
+
+#---
+
+[tbdb2cblcv?sql]
+args = $OF_COMPILE_IN > $OF_COMPILE_OUT
+
+#---
+
+[ofcbppe?rw]
+args= -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-close-on-commit --enable-end-of-fetch-100 --enable-varchar --enable-rw
+# OFCBPPE DEBUG OPTION: --enable-loglvl-debug
+
+[ofcbppe?sql]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-close-on-commit --enable-end-of-fetch-100 --enable-varchar
+# OFCBPPE DEBUG OPTION: --enable-loglvl-debug
+
+#---
+
+[osccblpp?cics]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -ne
+
+#---
+
+[cp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+args = $OF_COMPILE_IN $OF_COMPILE_OUT
+
+#---
+
+[ofcob?day_of_week]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L$TB_HOME/client/lib -lclientcommon -ltbertl -ltbertl_odbc -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so -g --notrunc --enable-ofasm
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob?title]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L$TB_HOME/client/lib -lclientcommon -ltbertl -ltbertl_odbc -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so -g --notrunc --enable-ofasm
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob?rw]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so -g --notrunc --enable-ofasm --enable-osvs --enable-rw
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L$TB_HOME/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so -g --notrunc --enable-ofasm --enable-osvs
+# OFCOB DEBUG OPTION: --enable-debug
+
+#=====#
+
+[deploy]
+file = $OF_COMPILE_BASE.so
+#dataset = SYS1.USERLIB
+#region = OSCOIVP1
+#tdl =

@@ -1,0 +1,61 @@
+[setup]
+workdir = /opt/tmaxapp/compile
+
+# Environment variables
+$SOURCECPY = /opt/source/copybook
+$OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/COPYBOOK.COMMON:$SOURCECPY/COPYBOOK.CICS:$SOURCECPY/COPYBOOK.DDL:$SOURCECPY/COPYBOOK.UPDATED:$SOURCECPY/MSTR.COPYLIB:$SOURCECPY/COPYBOOK.MSTRTSS:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTR:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTRBDS
+
+# Filter variables
+?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
+?day_of_week = grep -a "FROM DAY-OF-WEEK" $OF_COMPILE_IN
+?online = grep -av "^......\*" $OF_COMPILE_BASE.ofcbpp | grep -a "EXEC.*CICS"
+?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
+?title = grep -av "^......\*" $OF_COMPILE_IN | grep -a " TITLE '"
+
+[python3]
+args = check_copy.py $OF_COMPILE_IN $OF_COMPILE_OUT
+
+[dos2unix]
+$OF_COMPILE_OUT= $OF_COMPILE_BASE
+args = $OF_COMPILE_BASE.python
+
+[ofcbpp?title]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare
+
+[ofcbpp]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare --enable-osvs
+
+[tbdb2cblcv?sql]
+args = $OF_COMPILE_IN > $OF_COMPILE_OUT
+
+[ofcbppe?sql]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-close-on-commit --enable-end-of-fetch-100 --enable-varchar
+
+[osccblpp?cics]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -ne
+
+[ofcob?day_of_week]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L${TB_HOME}/client/lib -lclientcommon -ltbertl -ltbertl_odbc -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so --enable-ofasm -g --notrunc
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob?title]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L${TB_HOME}/client/lib -lclientcommon -ltbertl -ltbertl_odbc -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so --enable-ofasm -g --notrunc
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L${TB_HOME}/client/lib -ltbertl_odbc -lclientcommon -ltbertl -L$OPENFRAME_HOME/lib/DSNTIAR.so -L$OPENFRAME_HOME/lib/DSNTIAC.so --enable-ofasm -g --notrunc --enable-osvs
+# OFCOB DEBUG OPTION: --enable-debug
+
+[sh?online]
+args = deploy_online.sh $OF_COMPILE_BASE
+
+[sh]
+args = deploy_batch.sh $OF_COMPILE_BASE SYS1.NONIDMS.COBLIB
+
+#[deploy?online]
+#file = $OF_COMPILE_BASE.so
+#region = $REGION_NAME
+
+#[deploy]
+#file = $OF_COMPILE_BASE.so
+#dataset = SYS1.NONIDMS.COBLIB

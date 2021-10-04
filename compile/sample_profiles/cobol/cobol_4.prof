@@ -1,0 +1,39 @@
+[setup]
+workdir = /opt/tmaxapp/compile
+
+# Environment variables
+$OFCOBCPY = $OFCOBCPY:$TB_HOME/client/include
+
+# Filter variables
+?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
+?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
+?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
+
+[ofcbpp?rw]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare --enable-rw
+
+[ofcbpp]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --conv-stop-run --enable-declare
+
+[osccblpp?cics]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT
+
+[tbpcb?sql]
+args = INAME=$OF_COMPILE_IN ONAME=$OF_COMPILE_OUT INCLUDE=$COPY_HOME END_OF_FETCH=100 COMP5=NO CODE=COBOL UNSAFE_NULL=YES VARCHAR=YES IGNORE_ERROR=YES DB2_SYNTAX=YES
+
+[cp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+args = $OF_COMPILE_IN $OF_COMPILE_OUT
+
+[ofcob?rw]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -lcicsexci -L$OFCOB_HOME/lib -lcli -L$ODBC_HOME/lib -lodbc  -L$OPENFRAME_HOME/lib/PSIGSFC.so -L$OPENFRAME_HOME/lib/ILBOABN0.so -L$OPENFRAME_HOME/core/lib64 -U --enable-cbltdli --save-temps --ptr-redef --notrunc --expanded --enable-rw
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -lcicsexci -L$OFCOB_HOME/lib -lcli -L$ODBC_HOME/lib -lodbc -L$OPENFRAME_HOME/lib/PSIGSFC.so -L$OPENFRAME_HOME/lib/ILBOABN0.so -L$OPENFRAME_HOME/core/lib64  -U --enable-cbltdli --save-temps --ptr-redef --notrunc --expanded
+# OFCOB DEBUG OPTION: --enable-debug
+
+[deploy]
+file = $OF_COMPILE_BASE.so
+dataset = SYS1.USERLIB
+#region = OSCOIVP1

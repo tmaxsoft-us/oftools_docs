@@ -1,0 +1,16 @@
+[setup]
+workdir = /opt/tmaxapp/compile
+
+# Environment variables
+
+# Filter variables
+
+[mscasmc] 
+$OF_COMPILE_OUT = OF_COMPILE_BASE.atm
+args = $OF_COMPILE_IN -o OF_COMPILE_BASE.atm
+
+[mscmapc]
+args = -r OSCOIVP1 $OF_COMPILE_IN
+
+[mscmapupdate] 
+args = OSCOIVP1 -l $OF_COMPILE_BASE

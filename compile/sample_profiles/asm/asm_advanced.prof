@@ -1,0 +1,67 @@
+[setup]
+workdir = $COMPILE_WORK_DIR
+#workdir = /opt/tmaxapp/compile
+#workdir = /opt/tmaxapp/compile/asm
+#mandatory = ofasmpp:ofasma
+
+# Environment variables
+$SOURCEMACROS = /opt/source/MACROS
+$OFASM_MACLIB = $OFASM_HOME/maclib/ofmac:$SOURCEMACROS/maclib_38:$SOURCEMACROS/MACROS.CICS:$SOURCEMACROS/MACROS.COMMON:$SOURCEMACROS/MODIFIED.MACROS.CICS:$SOURCEMACROS/MODIFIED.MACROS.COMMON:$SOURCEMACROS/CICSVS.SOFT.MACLIB:$SOURCEMACROS/MACROS.SOFTQPR30
+
+# Filter variables
+
+# If you want to manually test the filters, you can add to the first grep the
+# following options: -nH --color=always
+?cics = grep -av "\*" $OF_COMPILE_IN | grep -a "EXEC[]*CICS"
+
+#=====#
+
+[dos2unix]
+$OF_COMPILE_OUT= $OF_COMPILE_IN
+args = $OF_COMPILE_IN
+
+#---
+
+[cp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asm
+args = $OF_COMPILE_IN $OF_COMPILE_OUT
+
+#---
+
+# Preprocessing
+[ofasmpp?cics]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmi
+args = -i $OF_COMPILE_IN -o  $OF_COMPILE_OUT --enable-cics
+
+[ofasmpp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmi
+args = -i $OF_COMPILE_IN -o  $OF_COMPILE_OUT
+
+#---
+
+# Assembly
+[ofasma]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT
+
+#---
+
+[sh]
+args =  create_json.sh $OF_COMPILE_BASE
+
+#---
+
+[ofasmif]
+args = -i $OF_COMPILE_BASE.json
+
+#---
+
+[g++]
+args = ${OF_COMPILE_BASE}_OFASM_VM_ENTRY.cpp -o $OF_COMPILE_BASE.so -m32 -shared -fPIC -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
+
+#=====#
+
+#[deploy]
+#file = $OF_COMPILE_BASE.asmo
+#dataset = SYS1.USERLIB 
+#region = OSCOIVP1
+#tdl =

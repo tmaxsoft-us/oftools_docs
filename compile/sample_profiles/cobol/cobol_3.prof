@@ -1,0 +1,50 @@
+  [setup]
+  workdir = /opt2/tmaxapp/compile
+
+  # Environment variables
+  $SOURCECPY = /opt2/tmaxwork/WORK/conv/copybook
+  $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/db:$SOURCECPY/fixedcopy:$SOURCECPY/rdbms:$SOURCECPY/ws-copy:$SOURCECPY/map:$SOURCECPY/msg:$SOURCECPY/pd:$TB_HOME/client/include:/opt2/tmaxwork/demosrc/copybook:/opt2/tmaxwork/YSW/NEXT_VALUE_FOR_20210218
+
+  # Filter variables
+  ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
+  ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
+  ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
+
+
+  [ofcbpp?rw]
+  args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --enable-declare --conv-stop-run --enable-rw
+
+  [ofcbpp]
+  args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT -copypath $OFCOBCPY --add-miss-period --enable-declare --enable-include
+
+  #[tbdb2cblcv]
+  #option = $OF_COMPILE_IN
+
+  [sed]
+  args = -i -e 's/\([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\)-\([0-9][0-9]\)\.\([0-9][0-9]\)\.\([0-9][0-9]\)\.\([0-9][0-9][0-9][0-9][0-9][0-9]\)/\1 \2:\3:\4.\5/g' -e 's/05  SQL-DUP-REC                   PIC S999 COMP VALUE -803./05  SQL-DUP-REC                 PIC S999 COMP VALUE +2627./g;s/ 05  SQL-DUP-REC                          PIC S999\+/05  SQL-DUP-REC                          PIC S9999/g;s/ COMP VALUE -803/COMP VALUE +2627/g' $OF_COMPILE_IN
+
+  [ofcbppe?sql?rw]
+  args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-end-of-fetch-100 --enable-mssql --enable-runtime-odbc --enable-unsafe-null --enable-varchar --enable-close-on-commit --enable-rw
+  # OFCBPPE DEBUG OPTION: --enable-loglvl-debug
+
+  [ofcbppe?sql]
+  args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-end-of-fetch-100 --enable-mssql --enable-runtime-odbc --enable-unsafe-null --enable-varchar --enable-close-on-commit
+  # OFCBPPE DEBUG OPTION: --enable-loglvl-debug
+
+  [osccblpp?cics]
+  args = $OF_COMPILE_IN -o $OF_COMPILE_OUT
+
+  [cp]
+  $OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+  args = $OF_COMPILE_IN $OF_COMPILE_OUT
+
+  [ofcob?rw]
+  args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -lconcli -ladjust -lofcee -lcicsexci -L$OFCOB_HOME/lib -lcli -L$ODBC_HOME/lib -lodbc -L$OPENFRAME_HOME/lib/PSIGSFC.so -L$OPENFRAME_HOME/lib/ILBOABN0.so -L$OPENFRAME_HOME/core/lib64 -g --notrunc -O0 --enable-asa-byte -U --enable-cbltdli --save-temps --ptr-redef  --expanded --enable-rw
+  # OFCOB DEBUG OPTION: --enable-debug
+
+  [ofcob] 
+  args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -L$OPENFRAME_HOME/lib -ltextfh -ltextsm -L$TB_HOME/client/lib -lclientcommon -lofcee -ltbertl -ltbertl_odbc -L$OPENFRAME_HOME/lib/DSNTIAR.so -L/opt2/tmaxwork/demosrc/copybook --notrunc -O0 --enable-asa-byte --enable-ofasm --force-trace
+  # OFCOB DEBUG OPTION: --enable-debug
+
+  [deploy]
+  file = $OF_COMPILE_BASE.so

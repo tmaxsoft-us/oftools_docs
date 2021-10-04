@@ -1,0 +1,40 @@
+[setup]
+workdir = /opt/tmaxapp/compile
+
+# Environment variables
+$SYSVOL = /opt/tmaxapp/OpenFrame/volume/SYSVOL
+$DB2INCLUDE = $SYSVOL/DB2.INCLUDE:$SYSVOL/DB2.INCLUDE2
+$OFCOBCPY = $OFCOBCPY:$SYSVOL/OFRAME.COPYLIB:$SYSVOL/OFRAME.DCLGNLIB:$DB2INCLUDE
+
+# Filter variables
+?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
+?sqlca  = grep -av "^......\*" $OF_COMPILE_IN | grep -a "01.* SQLCA "
+
+[dos2unix]
+$OF_COMPILE_OUT = $OF_COMPILE_IN
+args = $OF_COMPILE_IN
+
+[ofcbpp?rw]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-declare --enable-declare2 --collating-seq-ebcdic --enable-rw
+
+[ofcbpp]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-declare --enable-declare2 --collating-seq-ebcdic
+
+[tbpcb]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+args = INAME=$OF_COMPILE_IN ONAME=$OF_COMPILE_OUT
+
+[sed?sqlca]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.cob
+args  = -i 's/\(^......\) \(.*COPY \"SQLCA\"\.\)/TMAX  *\2/g' $OF_COMPILE_IN
+
+[ofcob?rw]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -U -L$OPENFRAME_HOME/lib -lofcee -ltextfh -ltextsm -lhidbdli -ltsys -L$TB_HOME/client/lib/ -ltbertl --enable-ofasm --enable-cbltdli --notrunc --cpm-name ASCEBCUS --init-space --enable-rw
+# OFCOB DEBUG OPTION: --enable-debug
+
+[ofcob]
+args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -U -L$OPENFRAME_HOME/lib -lofcee -ltextfh -ltextsm -lhidbdli -ltsys -L$TB_HOME/client/lib/ -ltbertl --enable-ofasm --enable-cbltdli --notrunc --cpm-name ASCEBCUS --init-space
+# OFCOB DEBUG OPTION: --enable-debug
+
+[deploy]
+file = $OF_COMPILE_BASE.so

@@ -1,0 +1,19 @@
+[setup]
+workdir = /opt/tmaxapp/compile
+
+# Filter variables
+?cics = grep -av "^\*|^\.\*" $OF_COMPILE_IN | grep -a "EXEC.*CICS"
+
+[ofasmpp?cics]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmi
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT --enable-cics
+
+[ofasmpp]
+$OF_COMPILE_OUT = $OF_COMPILE_BASE.asmi
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT
+
+[ofasma]
+args = -i $OF_COMPILE_IN -o $OF_COMPILE_OUT 
+
+[deploy]
+file = $OF_COMPILE_BASE.asmo
