@@ -12,19 +12,30 @@
   * [3.2 Advanced profile](#32-advanced-profile)
   * [3.3 Other examples](#33-other-examples)
 * [4. Copybook](#4-copybook)
+  * [4.1 Default profile](#41-default-profile)
 * [5. JCL](#5-jcl)
+  * [5.1 Default profile](#51-default-profile)
 * [6. Proc](#6-proc)
+  * [6.1 Default profile](#61-default-profile)
 * [7. Assembler Interface](#7-assembler-interface)
+  * [7.1 Default profile](#71-default-profile)
 * [8. C Language](#8-c-language)
+  * [8.1 Default profile](#81-default-profile)
 * [9. C++ Language](#9-c-language)
+  * [9.1 Default profile](#91-default-profile)
 * [10. SQL](#10-sql)
+  * [10.1 Default profile](#101-default-profile)
 * [11. BMS Map](#11-bms-map)
   * [11.1 Default profile](#111-default-profile)
   * [11.2 Other examples](#112-other-examples)
 * [12. CICS CSD](#12-cics-csd)
+  * [12.1 Default profile](#121-default-profile)
 * [13. Control](#13-control)
+  * [13.1 Default profile](#131-default-profile)
 * [14. Easytrieve](#14-easytrieve)
+  * [14.1 Default profile](#141-default-profile)
 * [15. Easytrieve Plus](#15-easytrieve-plus)
+  * [15.1 Default profile](#151-default-profile)
 * [16. Environment variables resources](#16-environment-variables-resources)
 
 ## 1. Overview
@@ -505,7 +516,7 @@ This profile use additional scripts:
 
 <a href="#top">Back to top</a>
 
-### 3.1 Default profile
+### 3.1 [Default profile](./asm/asm_default.prof)
 
 ```ini
 [setup]
@@ -525,7 +536,7 @@ This one is very simple, there are only 3 sections:
 - `[ofasmpp]` section: OpenFrame ASM pre-compilation execution.
 - `[ofasma]` section: OpenFrame ASM assembly execution.
 
-### 3.2 Advanced profile
+### 3.2 [Advanced profile](asm/asm_advanced.prof)
 
 ```ini
 [setup]
@@ -630,6 +641,8 @@ This profile use an additional script: [create_json.sh](../additional_scripts/cr
 <details>
   <summary>Profile 1</summary>
 
+  [link to profile](asm/asm_1.prof)
+
   ```ini
   [setup]
   workdir = /opt/tmaxapp/compile
@@ -658,6 +671,8 @@ This profile use an additional script: [create_json.sh](../additional_scripts/cr
 
 <a href="#top">Back to top</a>
 
+### 4.1 [Default profile](./copybook/copybook_default.prof)
+
 ```ini
 [setup]
 workdir = $COMPILE_WORK_DIR
@@ -683,6 +698,8 @@ workdir = $COMPILE_WORK_DIR
 ## 5. JCL
 
 <a href="#top">Back to top</a>
+
+### 5.1 [Default profile](./jcl/jcl_default.prof)
 
 ```ini
 [setup]
@@ -710,6 +727,8 @@ workdir = $COMPILE_WORK_DIR
 
 <a href="#top">Back to top</a>
 
+### 6.1 [Default profile](./proc/proc_default.prof)
+
 ```ini
 [setup]
 workdir = $COMPILE_WORK_DIR
@@ -735,6 +754,8 @@ workdir = $COMPILE_WORK_DIR
 ## 7. Assembler Interface
 
 <a href="#top">Back to top</a>
+
+### 7.1 [Default profile](./asm_interface/asm_interface_default.prof)
 
 ```ini
 [setup]
@@ -805,6 +826,8 @@ There are 6 sections in this profile:
 
 <a href="#top">Back to top</a>
 
+### 8.1 [Default profile](./c_language/c_default.prof)
+
 ```ini
 [setup]
 workdir = $COMPILE_WORK_DIR
@@ -858,6 +881,8 @@ There are 4 sections in this profile:
 
 <a href="#top">Back to top</a>
 
+### 9.1 [Default profile](./c++_language/c++_default.prof)
+
 ```ini
 [setup]
 workdir = $COMPILE_WORK_DIR
@@ -910,6 +935,8 @@ There are 4 sections in this profile:
 
 <a href="#top">Back to top</a>
 
+### 10.1 [Default profile](./sql/sql_default.prof)
+
 ```ini
 [setup]
 workdir = $COMPILE_WORK_DIR
@@ -934,9 +961,9 @@ workdir = $COMPILE_WORK_DIR
 
 ## 11. BMS Map
 
-### 11.1 Default profile
-
 <a href="#top">Back to top</a>
+
+### 11.1 [Default profile](./bms_map/bms_map_default.prof)
 
 ```ini
 [setup]
@@ -1021,28 +1048,34 @@ This profile use an additional script: [deploy_map.sh](../additional_scripts/dep
 <details>
   <summary>Profile 1</summary>
 
-```ini
-[setup]
-workdir = /opt/tmaxapp/compile
+  [Link to profile](./bms_map/bms_map_1.prof)
 
-# Environment variables
+  ```ini
+  [setup]
+  workdir = /opt/tmaxapp/compile
 
-# Filter variables
+  # Environment variables
 
-[mscasmc]
-$OF_COMPILE_OUT = OF_COMPILE_BASE.atm
-args = $OF_COMPILE_IN -o OF_COMPILE_BASE.atm
+  # Filter variables
 
-[mscmapc]
-args = -r OSCOIVP1 $OF_COMPILE_IN
+  [mscasmc]
+  $OF_COMPILE_OUT = OF_COMPILE_BASE.atm
+  args = $OF_COMPILE_IN -o OF_COMPILE_BASE.atm
 
-[mscmapupdate] 
-args = OSCOIVP1 -l $OF_COMPILE_BASE
-```
+  [mscmapc]
+  args = -r OSCOIVP1 $OF_COMPILE_IN
+
+  [mscmapupdate] 
+  args = OSCOIVP1 -l $OF_COMPILE_BASE
+  ```
+
+</details>
 
 ## 12. CICS CSD
 
 <a href="#top">Back to top</a>
+
+### 12.1 [Default profile](./cics_csd/cics_csd_default.prof)
 
 ```ini
 [setup]
@@ -1065,6 +1098,8 @@ workdir = $COMPILE_WORK_DIR
 ## 13. Control
 
 <a href="#top">Back to top</a>
+
+### 13.1 [Default profile](./control/control_default.prof)
 
 ```ini
 [setup]
@@ -1091,6 +1126,8 @@ workdir = $COMPILE_WORK_DIR
 ## 14. Easytrieve
 
 <a href="#top">Back to top</a>
+
+### 14.1 [Default profile](./easytrieve/easytrieve_default.prof)
 
 ```ini
 [setup]
@@ -1142,6 +1179,8 @@ There are 4 sections in this profile:
 ## 15. Easytrieve Plus
 
 <a href="#top">Back to top</a>
+
+### 15.1 [Default profile](./easytrieve_plus/easytrieve_plus_default.prof)
 
 ```ini
 [setup]
