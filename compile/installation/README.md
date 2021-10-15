@@ -38,7 +38,7 @@ su - oframe
 vi ~/.bash_profile
 ```
 
-**b.** Add the following lines, the most important being the `export PATH` line. All the rest is optional depending on your environment:
+**b.** Add the following lines  (if not already in the profile), the most important being the `export PATH` line. All the rest is optional depending on your environment:
 
 ```bash
 #===============================================================#
@@ -87,37 +87,13 @@ alias srcprot='cd ${SOURCE_DIR}/EASYTRIEVE'
 #===============================================================#
 #                   OFTOOLS_COMPILE - FUNCTIONS                 #
 #===============================================================#
+function compilation-fn { oftools_compile $@ }
+function compilation-cobol-fn { oftools_compile -p $COBOL_PROFILE -s $1 -l INFO }
+function compilation-asm-fn { oftools_compile -p $ASM_PROFILE -s $1 -l INFO }
 
-function compilation-cobol-fn {
-  if [ $# -ne 1 ]; then
-    printf "Usage: %s ProgramWithExtension\n" `basename $0`
-    exit 1
-  fi
-
-  if [ ! -f $1 ]; then
-    echo "Error: Program $1 does not exist"
-    exit 2
-  fi
-
-  oftools_compile -p $COBOL_PROFILE -s $1 -l INFO
-}
-
-function compilation-asm-fn {
-  if [ $# -ne 1 ]; then
-    printf "Usage: %s ProgramWithExtension\n" `basename $0`
-    exit 1
-  fi
-
-  if [ ! -f $1 ]; then
-    echo "Error: Program $1 does not exist"
-    exit 2
-  fi
-
-  oftools_compile -p $ASM_PROFILE -s $1 -l INFO
-}
-
-alias cmpcbl=compilation-cobol-fn
-alias cmpasm=compilation-asm-fn
+alias comp=compilation-fn
+alias compcbl=compilation-cobol-fn
+alias compasm=compilation-asm-fn
 
 # With the same idea it is possible to create as many function as you need
 ```

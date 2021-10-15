@@ -24,7 +24,7 @@
 
 ## 2. Usage
 
-```
+```bash
 oftools_compile -p <path_to_profile> -s <path_to_source> [options]
 ```
 
