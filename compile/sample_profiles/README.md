@@ -97,7 +97,7 @@ $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRA
 #=====#
 
 [dos2unix]
-$OF_COMPILE_OUT= $OF_COMPILE_IN
+$OF_COMPILE_OUT = $OF_COMPILE_IN
 args = $OF_COMPILE_IN
 
 #---

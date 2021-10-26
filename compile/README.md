@@ -20,7 +20,7 @@
 
 **OpenFrame Tools Compile** or **oftools_compile** is a general purpose build tool that is designed to be flexible to support compilers and tools available in the OpenFrame environment. The diagram below shows an overview of the **oftools_compile** tool.
 
-![alt-text](./reference_images/overview.png)
+![alt-text](./reference_images/1_overview.png)
 
 ## 2. Usage
 
@@ -61,9 +61,9 @@ Help & version:
 
 The profile is a configuration file that describe how the build process should be executed. It consists of three different types of divisions which are: **setup** division, **execute** division, and **deploy** division. Each division consists of one or more sections and each section requires dedicated options to be defined. Note that a section can be defined by a string surrounded by \[ \] and does not allow duplicated names.
 
-The environment variables and the filter variables are allowed to be defined in any of sections in the profile. Note that a filter variable will be saved in the program memory when defined, and executed only when needed, which means when used in a given section.
+![alt-text](./reference_images/2_profile_example.png)
 
-![alt-text](./reference_images/divisions.png)
+The environment and the filter variables are allowed to be defined in any of the sections of the profile. Note that a filter variable will be saved in the program memory when defined, and executed only when needed, which means when used in a given section.
 
 ### 3.1 Setup Division
 
@@ -75,6 +75,8 @@ The **setup** division allows to define one `[setup]` section only. In the `[set
   
 - as any other section, the `[setup]` section accepts environment and filter variables definitions.
 
+![alt-text](./reference_images/3_profile_setup_division.png)
+
 ### 3.2 Execute Division
 
 The **execute** division is for the sections that execute compilers and tools to build a program. Unlike the setup division, this section area allows you to define multiple sections. For each section, the name of the section is directly mapped to a Linux command and the value of the 'args' option is appended to the command while the execution of the Linux command. This is possible to use filter variables with the section names' of this division.
@@ -84,6 +86,8 @@ For any section of the **execute** division, here are the available options:
 - 'args': for instance, if you define a section as `[ofcbpp]`, with 'args' defined as `-i $OF_COMPILE_IN -o $OF_COMPILE_OUT`, then the Linux command `ofcbpp -i $OF_COMPILE_IN -o $OF_COMPILE_OUT` will be executed.
 
 - as any other section, a section of the **execute** division accepts environment and filter variables definitions.
+
+![alt-text](./reference_images/4_profile_execute_division.png)
 
 ### 3.3 Deploy Division
 
@@ -110,6 +114,7 @@ In a `[deploy]` section, there are four different types of options that you can 
 
 - as any other section, a section of the **deploy** division accepts environment and filter variables definitions.
 
+![alt-text](./reference_images/5_profile_deploy_division.png)
 
 ### 3.4 Environment variable
 
@@ -138,6 +143,10 @@ For instance if there are three sections defined, `[ofcbpp?sql]`, `[ofcbpp?cics]
 
 Moreover, if the next section `[ofcob]` also needs a filter variable to be evaluated, let's say there are 2 sections `[ofcob?rw]` and `[ofcob]` , it may be necessary to define the filter variable **?rw** in each of the previous `[ofcbpp]` sections. Since we don't know in advance which `[ofcbpp]` section is going to be executed for a given program, we need to make sure that the filter **?rw** is properly defined. A good practice is to place all the filter variable definitions in the setup division, since we know in advance that this section division will be executed unconditionally.
 
+Profile example:
+
+![alt-text](./reference_images/6_profile_filters_example.png)
+
 ## 4. Outputs
 
 ### 4.1 Work Directory
@@ -145,54 +154,60 @@ Moreover, if the next section `[ofcob]` also needs a filter variable to be evalu
 The 'workdir' option is set to a working directory where the log, report, and intermediate files of the compilation get stored. There are two different types of directory inside the workdir.
 
 1. **report**
-    - The report file, formatted as a csv, is located in this folder.
+    - The report file, formatted as a CSV, is located in this folder.
     - Each report file has a time stamp in the file name to tell us when the file got created.
 2. **file name with a time stamp and a default tag**
-    - For each compiling source, a dedicated folder is created as `PROGRAMNAME_no_tag_YYYYMMDD_HHMMSS`.
+    - For each compiling source, a dedicated folder is created as `PROGRAMNAME_<tag>_YYYYMMDD_HHMMSS`, where by default **tag** is the logname of the user running the `oftools_compile` command.
     - In this folder, you can see the _oftools_compile.log_ file that describes what sections and commands were executed.
     - Also, you may see intermediate files here if they got generated during the execution of the sections.
 
-Here is an example of what the working directory, created for the compilation of the TMAXKRC3 program, would look like:
+Here is an example of what the working directory, created for the compilation of the **sample.cob** program, would look like:
 
-![alt-text](./reference_images/oftools_compile_workdir.png)
+![alt-text](./reference_images/7_working_directory.png)
 
 ### 4.2 Log File
 
 The log file stores information about which commands were executed. Here is a snippet of what it would look like:
 
-![alt-text](./reference_images/oftools_compile_log.png)
+![alt-text](./reference_images/8_compilation_log_file_info_level.png)
 
 In the log file, you will see a string with a section appended to the actual command that has been executed.
-For instance, in the tbpcb section, you can see the actual command that has been executed for tbpcb.
+For instance, in the ofcbpp section, you can see the actual command that has been executed for ofcbpp.
 
 ```
-[tbpcb] tbpcb INAME=TMAXKRC3.ofcbpp ONAME=TMAXKRC3.cob
+[ofcbpp] ofcbpp -i sample.cob -i sample.cbl
 ```
+
+It is possible to get more details about the execution of `oftools_compile` with the DEBUG log level:
+
+![alt-text](./reference_images/9_compilation_log_file_debug_level.png)
 
 ### 4.3 Grouping Option
 
-If the **grouping** option is used with the execution of oftools_compile (recommended when performing mass compilation), all the work directories created for each program are moved under a folder named as `group_no_tag_YYYYMMDD_HHMMSS`. Moreover, this option concatenate all _oftools_compile.log_ files in one _group.log_ for easy analysis if some errors occur during compilation.
+If the **grouping** option is used with the execution of oftools_compile (recommended when performing mass compilation), all the work directories created for each program are moved under a folder named as `group_<tag>_YYYYMMDD_HHMMSS`. Moreover, this option concatenates all _oftools_compile.log_ files in one _group.log_ for easy analysis if some errors occur during compilation.
 
-See below example with the tag **test**:
+See below example where the tag is the result of the `logname` command:
 
-![alt-text](./reference_images/oftools_compile_grouping.png)
+![alt-text](./reference_images/10_grouping.png)
 
 When you compile multiple programs at the same time using a directory as a source parameter, it is recommended to specify the language used in the **tag** option for tracking purposes. If all programs in your directory are COBOL programs, you should specify a tag like `COBOL_username` for instance.
 
 ### 4.4 Report File
 
-The report file is formatted as a csv or a comma delimited file that displays:
+The report file is formatted as a CSV, a comma delimited file, that displays:
 
+-   the count of the programs
 -   the name of the source code (absolute path),
 -   the directory for the listing files,
--   the last section executed,
 -   whether the last section executed was successful or not,
+-   the return code of the compilation,
+-   the last section executed,
 -   and the amount of time it took to complete compilation.
 
 By utilizing this file, you will be able to understand which program has failed and in which exact step it failed.
 
 Here's an example:
 
-![alt-text](./reference_images/oftools_compile_csv.png)
+![alt-text](./reference_images/11_compilation_report_file.png)
 
-You can see based on the example that 3 programs were compiled. TMAXKRC1, TMAXKRC2, and TMAXKRC3. All 3 were successful because they all reached the deploy stage which is the last stage of our profile, and they all executed deploy successfully.
+You can see based on the example that 3 programs were compiled, sample1, sample2, and sample3. All 3 were successful because they all reached the deploy stage which is the last stage of our profile, and they all executed deploy successfully.
