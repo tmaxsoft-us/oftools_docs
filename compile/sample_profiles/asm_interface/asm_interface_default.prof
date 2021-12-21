@@ -28,11 +28,11 @@ $OF_COMPILE_OUT = ${pgm}.so
 args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -fPIC -shared -g -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
 
 [g++?exit]
-$OF_COMPILE_OUT = ${pgm}_VM_EXIT.so
+$OF_COMPILE_OUT = ${pgm}_OFASM_VM_EXIT.so
 args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -fPIC -shared -g -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
 
 [g++?load]
-$OF_COMPILE_OUT = ${pgm}_VM_LOAD.so
+$OF_COMPILE_OUT = ${pgm}_OFASM_VM_LOAD.so
 args = $OF_COMPILE_IN -o $OF_COMPILE_OUT -fPIC -shared -g -L$OFASM_HOME/lib -lofasmVM -L$TMAXDIR/lib -lcli
 
 #=====#

@@ -1,0 +1,19 @@
+[setup]
+workdir = $COMPILE_WORK_DIR
+#workdir = /opt/tmaxapp/compile
+#workdir = /opt/tmaxapp/compile/rdbms
+#mandatory = 
+
+# Environment variables
+
+# Filter variables
+# If you want to manually test the filters, you can add to the first grep the
+# following options: -nH --color=always
+
+#=====#
+
+#[deploy]
+#file = $OF_COMPILE_BASE.so
+#dataset = SYS1.USERLIB
+#region = OSCOIVP1 
+#tdl =

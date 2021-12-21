@@ -16,6 +16,8 @@
   * [4.3 Grouping Option](#43-grouping-option)
   * [4.4 Report File](#44-report-file)
 
+<div style="page-break-after: always;"></div>
+
 ## 1. Overview
 
 **OpenFrame Tools Compile** or **oftools_compile** is a general purpose build tool that is designed to be flexible to support compilers and tools available in the OpenFrame environment. The diagram below shows an overview of the **oftools_compile** tool.
@@ -56,6 +58,8 @@ Help & version:
   -h, --help            show this help message and exit
   -v, --version         show this version message and exit
 ```
+
+<div style="page-break-after: always;"></div>
 
 ## 3. Profile
 
@@ -146,6 +150,8 @@ Moreover, if the next section `[ofcob]` also needs a filter variable to be evalu
 Profile example:
 
 ![alt-text](./reference_images/6_profile_filters_example.png)
+
+<div style="page-break-after: always;"></div>
 
 ## 4. Outputs
 

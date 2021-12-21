@@ -44,35 +44,46 @@ vi ~/.bash_profile
 #===============================================================#
 #                   VERSION CONTROL                             #
 #===============================================================#
-export GIT_HOME=${HOME_DIRECTORY}/git_repository
+export GIT_HOME=${TMAX_HOME}/git_repositories
 
 #===============================================================#
 #                   OFTOOLS_COMPILE - ENVIRONMENT VARIABLES     #
 #===============================================================#
-export COMPILE_WORK_DIR=${HOME_DIRECTORY}/tmaxapp/compile
-export SOURCE_DIR=${HOME_DIRECTORY}/tmaxwork/source
-export PATH=${PATH}:${HOME}/.local/bin
+export COMPILE_WORK_DIR=${TMAX_HOME}/tmaxapp/compile
+export SOURCE_DIR=${TMAX_HOME}/source
+export PROFILE_DIR=${GIT_HOME}/compilation-configuration/profiles
+export PATH=${PATH}:${GIT_HOME}/compilation-configuration/scripts
 
 #===============================================================#
 #                   OFTOOLS_COMPILE - PROFILES                  #
 #===============================================================#
-export COBOL_PROFILE=${GIT_HOME}/compile/cobol_default.prof
-export ASM_PROFILE=${GIT_HOME}/compile/asm_default.prof
-export CPY_PROFILE=${GIT_HOME}/compile/copybook_default.prof
-export JCL_PROFILE=${GIT_HOME}/compile/jcl_default.prof
-export PROC_PROFILE=${GIT_HOME}/compile/proc_default.prof
-export ASM_INT_PROFILE=${GIT_HOME}/compile/asm_interface_default.prof
-export C_PROFILE=${GIT_HOME}/compile/c_default.prof
-export C++_PROFILE=${GIT_HOME}/compile/c++_default.prof
-export BMS_MAP_PROFILE=${GIT_HOME}/compile/bms_map_default.prof
-export EASYTRIEVE_PROFILE=${GIT_HOME}/compile/EASYTRIEVE_default.prof
+export DEV_PROFILES=${PROFILE_DIR}/developer
+export CICD_PROFILES=${PROFILE_DIR}/cicd
+
+export COBOL_PROFILE=${DEV_PROFILES}/cbl.prof
+export ASM_PROFILE=${DEV_PROFILES}/asm.prof
+export CPY_PROFILE=${DEV_PROFILES}/cpy.prof
+export JCL_PROFILE=${DEV_PROFILES}/jcl.prof
+export PROC_PROFILE=${DEV_PROFILES}/prc.prof
+export ASM_INT_PROFILE=${DEV_PROFILES}/asm_interface.prof
+export C_PROFILE=${DEV_PROFILES}/c.prof
+export CPP_PROFILE=${DEV_PROFILES}/cpp.prof
+export SQL_PROFILE=${DEV_PROFILES}/sql.prof
+export RDBMS_PROFILE=${DEV_PROFILES}/rdbms.prof
+export BMS_MAP_PROFILE=${DEV_PROFILES}/bms.prof
+export CSD_PROFILE=${DEV_PROFILES}/csd.prof
+export CTL_PROFILE=${DEV_PROFILES}/ctl.prof
+export EASYTRIEVE_PROFILE=${DEV_PROFILES}/esy.prof
+export EASYTRIEVEP_PROFILE=${DEV_PROFILES}/esyp.prof
 
 #===============================================================#
 #                   OFTOOLS_COMPILE - ALIASES                   #
 #===============================================================#
 alias compile='cd ${COMPILE_WORK_DIR}'
+alias compwd='cd ${COMPILE_WORK_DIR}'
 alias src='cd ${SOURCE_DIR}'
-alias prof='cd ${GIT_HOME}/compile'
+alias profiles='cd ${GIT_HOME}/compilation-configuration/profiles'
+
 alias srccob='cd ${SOURCE_DIR}/COBOL'
 alias srcasm='cd ${SOURCE_DIR}/ASM'
 alias srccpy='cd ${SOURCE_DIR}/COPYBOOK'
@@ -81,8 +92,13 @@ alias srcproc='cd ${SOURCE_DIR}/PROC'
 alias srcasmint='cd ${SOURCE_DIR}/ASM_INTERFACE'
 alias srcc='cd ${SOURCE_DIR}/C'
 alias srcc++='cd ${SOURCE_DIR}/C++'
+alias srcsql='cd ${SOURCE_DIR}/SQL'
+alias srcrdbms='cd ${SOURCE_DIR}/RDBMS'
 alias srcbms='cd ${SOURCE_DIR}/BMS_MAP'
+alias srccsd='cd ${SOURCE_DIR}/CICS-CSD'
+alias srcctl='cd ${SOURCE_DIR}/Control'
 alias srcprot='cd ${SOURCE_DIR}/EASYTRIEVE'
+alias srcc++='cd ${SOURCE_DIR}/C++'
 
 #===============================================================#
 #                   OFTOOLS_COMPILE - FUNCTIONS                 #
