@@ -6,7 +6,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 

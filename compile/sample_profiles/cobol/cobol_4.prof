@@ -4,7 +4,7 @@ workdir = /opt/tmaxapp/compile
 # Environment variables
 $OFCOBCPY = $OFCOBCPY:$TB_HOME/client/include
 
-# Filter variables
+# Filter functions
 ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
 ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
 ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"

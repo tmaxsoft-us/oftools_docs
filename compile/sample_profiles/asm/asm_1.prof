@@ -1,7 +1,9 @@
 [setup]
 workdir = /opt/tmaxapp/compile
 
-# Filter variables
+# Filter functions
+# If you want to manually test the filters, you can add to the first grep the
+# following options: -nH --color=always
 ?cics = grep -av "^\*|^\.\*" $OF_COMPILE_IN | grep -a "EXEC.*CICS"
 
 [ofasmpp?cics]

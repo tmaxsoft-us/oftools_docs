@@ -103,9 +103,9 @@ alias srcc++='cd ${SOURCE_DIR}/C++'
 #===============================================================#
 #                   OFTOOLS_COMPILE - FUNCTIONS                 #
 #===============================================================#
-function compilation-fn { oftools_compile $@ }
-function compilation-cobol-fn { oftools_compile -p $COBOL_PROFILE -s $1 -l INFO }
-function compilation-asm-fn { oftools_compile -p $ASM_PROFILE -s $1 -l INFO }
+function compilation-fn { oftools_compile $@; }
+function compilation-cobol-fn { oftools_compile -p $COBOL_PROFILE -s $1 -l INFO; }
+function compilation-asm-fn { oftools_compile -p $ASM_PROFILE -s $1 -l INFO; }
 
 alias comp=compilation-fn
 alias compcbl=compilation-cobol-fn

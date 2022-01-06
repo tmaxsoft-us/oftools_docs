@@ -9,7 +9,7 @@
   * [3.2 Execute Division](#32-execute-division)
   * [3.3 Deploy Division](#33-deploy-division)
   * [3.4 Environment variable](#34-environment-variable)
-  * [3.5 Filter variable](#35-filter-variable)
+  * [3.5 Filter function](#35-filter-function)
 * [4. Outputs](#4-outputs)
   * [4.1 Work Directory](#41-work-directory)
   * [4.2 Log File](#42-log-file)
@@ -67,7 +67,7 @@ The profile is a configuration file that describe how the build process should b
 
 ![alt-text](./reference_images/2_profile_example.png)
 
-The environment and the filter variables are allowed to be defined in any of the sections of the profile. Note that a filter variable will be saved in the program memory when defined, and executed only when needed, which means when used in a given section.
+The environment and the filter functions are allowed to be defined in any of the sections of the profile. Note that a filter function will be saved in the program memory when defined, and executed only when needed, which means when used in a given section.
 
 ### 3.1 Setup Division
 
@@ -77,25 +77,25 @@ The **setup** division allows to define one `[setup]` section only. In the `[set
   
 - 'mandatory' option is optional. This option is the list of section that must be run at some point through the program execution, colon separated.
   
-- as any other section, the `[setup]` section accepts environment and filter variables definitions.
+- as any other section, the `[setup]` section accepts environment and filter functions definitions.
 
 ![alt-text](./reference_images/3_profile_setup_division.png)
 
 ### 3.2 Execute Division
 
-The **execute** division is for the sections that execute compilers and tools to build a program. Unlike the setup division, this section area allows you to define multiple sections. For each section, the name of the section is directly mapped to a Linux command and the value of the 'args' option is appended to the command while the execution of the Linux command. This is possible to use filter variables with the section names' of this division.
+The **execute** division is for the sections that execute compilers and tools to build a program. Unlike the setup division, this section area allows you to define multiple sections. For each section, the name of the section is directly mapped to a Linux command and the value of the 'args' option is appended to the command while the execution of the Linux command. This is possible to use filter functions with the section names' of this division.
 
 For any section of the **execute** division, here are the available options:
 
 - 'args': for instance, if you define a section as `[ofcbpp]`, with 'args' defined as `-i $OF_COMPILE_IN -o $OF_COMPILE_OUT`, then the Linux command `ofcbpp -i $OF_COMPILE_IN -o $OF_COMPILE_OUT` will be executed.
 
-- as any other section, a section of the **execute** division accepts environment and filter variables definitions.
+- as any other section, a section of the **execute** division accepts environment and filter functions definitions.
 
 ![alt-text](./reference_images/4_profile_execute_division.png)
 
 ### 3.3 Deploy Division
 
-The **deploy** division is for defining how the compiled program gets deployed into different destinations. This division allows to define multiple `[deploy]` sections. This is possible to use filter variables with the section names' of this division.
+The **deploy** division is for defining how the compiled program gets deployed into different destinations. This division allows to define multiple `[deploy]` sections. This is possible to use filter functions with the section names' of this division.
 
 In a `[deploy]` section, there are four different types of options that you can define:
 
@@ -116,7 +116,7 @@ In a `[deploy]` section, there are four different types of options that you can 
     - Required: no
     - Internally, it will trigger `tdlupdate` command to deploy the file to the tdl library.
 
-- as any other section, a section of the **deploy** division accepts environment and filter variables definitions.
+- as any other section, a section of the **deploy** division accepts environment and filter functions definitions.
 
 ![alt-text](./reference_images/5_profile_deploy_division.png)
 
@@ -137,15 +137,15 @@ An environment variable can be defined by adding `$` as a prefix to the name of 
     - This value gets automatically updated by removing extension of `$OF_COMPILE_IN` at the time the given section gets initialized.
     - This can be overridden by defining `$OF_COMPILE_BASE` in the given section.
 
-### 3.5 Filter variable
+### 3.5 Filter function
 
-A filter variable can be defined by adding '?' as a prefix to the name of an option. The main purpose of this variable is to execute sections conditionally based on the result of the filter variable. For example, when you append a filter variable to a section name, the given section will be executed only if the filter variable is true or has a return code of zero.
+A filter function can be defined by adding '?' as a prefix to the name of an option. The main purpose of this function is to execute sections conditionally based on the result of it. For example, when you append a filter function to a section name, the given section will be executed only if the filter function is true or has a return code of zero.
 
-Note that when you define multiple sections with the same name but have different filter variables appended, only one of them will be executed during the build process.
+Note that when you define multiple sections with the same name but have different filter functions appended, only one of them will be executed during the build process.
 
-For instance if there are three sections defined, `[ofcbpp?sql]`, `[ofcbpp?cics]`, `[ofcbpp]`, and only the filter variable **?sql** is true, then the section `[ofcbpp?sql]` will be executed while `[ofcbpp?cics]` and `[ofcbpp]` will be ignored. Moreover, the sections using a filter variable must be placed before the default section without filter. Using the example seen previously, `[ofcbpp?sql]` and `[ofcbpp?cics]` sections must be placed before the `[ofcbpp]` section. If the `[ofcbpp]` section was first, oftools_compile would executes the section `[ofcbpp]` directly, and consequently it would not even consider the sections with a filter, `[ofcbpp?sql]` and `[ofcbpp?cics]`.
+For instance if there are three sections defined, `[ofcbpp?sql]`, `[ofcbpp?cics]`, `[ofcbpp]`, and only the filter function **?sql** is true, then the section `[ofcbpp?sql]` will be executed while `[ofcbpp?cics]` and `[ofcbpp]` will be ignored. Moreover, the sections using a filter function must be placed before the default section without filter. Using the example seen previously, `[ofcbpp?sql]` and `[ofcbpp?cics]` sections must be placed before the `[ofcbpp]` section. If the `[ofcbpp]` section was first, oftools_compile would executes the section `[ofcbpp]` directly, and consequently it would not even consider the sections with a filter, `[ofcbpp?sql]` and `[ofcbpp?cics]`.
 
-Moreover, if the next section `[ofcob]` also needs a filter variable to be evaluated, let's say there are 2 sections `[ofcob?rw]` and `[ofcob]` , it may be necessary to define the filter variable **?rw** in each of the previous `[ofcbpp]` sections. Since we don't know in advance which `[ofcbpp]` section is going to be executed for a given program, we need to make sure that the filter **?rw** is properly defined. A good practice is to place all the filter variable definitions in the setup division, since we know in advance that this section division will be executed unconditionally.
+Moreover, if the next section `[ofcob]` also needs a filter function to be evaluated, let's say there are 2 sections `[ofcob?rw]` and `[ofcob]` , it may be necessary to define the filter function **?rw** in each of the previous `[ofcbpp]` sections. Since we don't know in advance which `[ofcbpp]` section is going to be executed for a given program, we need to make sure that the filter **?rw** is properly defined. A good practice is to place all the filter function definitions in the setup division, since we know in advance that this section division will be executed unconditionally.
 
 Profile example:
 

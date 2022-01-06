@@ -3,7 +3,7 @@ workdir = /opt/tmaxapp/compile
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 
 [mscasmc] 
 $OF_COMPILE_OUT = OF_COMPILE_BASE.atm

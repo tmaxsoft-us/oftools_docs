@@ -85,8 +85,7 @@ workdir = $COMPILE_WORK_DIR
 $SOURCECPY = /opt/source/copybook
 $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/COPYBOOK.COMMON:$SOURCECPY/COPYBOOK.CICS:$SOURCECPY/COPYBOOK.DDL:$SOURCECPY/COPYBOOK.UPDATED:$SOURCECPY/MSTR.COPYLIB:$SOURCECPY/COPYBOOK.MSTRTSS:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTR:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTRBDS
 
-# Filter variables
-
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
@@ -173,7 +172,7 @@ file = $OF_COMPILE_BASE.so
 
 This profile is the advanced profile, there are 16 sections:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -181,7 +180,7 @@ This profile is the advanced profile, there are 16 sections:
   
 - `[ofcbpp?title]` section: OpenFrame COBOL pre-compilation, for any COBOL program. This one will be executed under the condition of the filter `?title` being **True**.
   
-- `[ofcbpp?rw]` section: OpenFrame COBOL pre-compilation, for any COBOL program. This one will be executed under the condition of the filter `?rw` being **True**. If a match is found for 'REPORT' and 'SECTION', then the program enables the report writer option `(--enable-rw)` which is why the `[ofcbpp?rw]` section has the `--enable-rw` option while the normal `[ofcbpp]` section does not. If there is no match, the default section will be executed without the filter variable.
+- `[ofcbpp?rw]` section: OpenFrame COBOL pre-compilation, for any COBOL program. This one will be executed under the condition of the filter `?rw` being **True**. If a match is found for 'REPORT' and 'SECTION', then the program enables the report writer option `(--enable-rw)` which is why the `[ofcbpp?rw]` section has the `--enable-rw` option while the normal `[ofcbpp]` section does not. If there is no match, the default section will be executed without the filter function.
   
 - `[ofcbpp]` section: OpenFrame COBOL pre-compilation, for any COBOL program. This one will be executed if the filters above for the other ofcbpp sections are **False**.
   
@@ -230,7 +229,9 @@ These profiles are listed in chronological order of their creation date:
   $DB2INCLUDE = $SYSVOL/DB2.INCLUDE:$SYSVOL/DB2.INCLUDE2
   $OFCOBCPY = $OFCOBCPY:$SYSVOL/OFRAME.COPYLIB:$SYSVOL/OFRAME.DCLGNLIB:$DB2INCLUDE
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
   ?sqlca  = grep -av "^......\*" $OF_COMPILE_IN | grep -a "01.* SQLCA "
 
@@ -279,7 +280,9 @@ These profiles are listed in chronological order of their creation date:
   $SOURCECPY = /opt2/tmaxwork/WORK/conv/copybook
   $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/db:$SOURCECPY/fixedcopy:$SOURCECPY/rdbms:$SOURCECPY/ws-copy:$SOURCECPY/map:$SOURCECPY/msg:$SOURCECPY/pd:$TB_HOME/client/include:/opt2/tmaxwork/demosrc/copybook:/opt2/tmaxwork/YSW/NEXT_VALUE_FOR_20210218
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
   ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
   ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
@@ -342,7 +345,9 @@ These profiles are listed in chronological order of their creation date:
   $SOURCECPY = /opt2/tmaxwork/WORK/conv/copybook
   $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/db:$SOURCECPY/fixedcopy:$SOURCECPY/rdbms:$SOURCECPY/ws-copy:$SOURCECPY/map:$SOURCECPY/msg:$SOURCECPY/pd:$TB_HOME/client/include:/opt2/tmaxwork/demosrc/copybook:/opt2/tmaxwork/YSW/NEXT_VALUE_FOR_20210218
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
   ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
   ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
@@ -401,7 +406,9 @@ These profiles are listed in chronological order of their creation date:
   # Environment variables
   $OFCOBCPY = $OFCOBCPY:$TB_HOME/client/include
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
   ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
   ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
@@ -451,7 +458,9 @@ These profiles are listed in chronological order of their creation date:
   $SOURCECPY = /opt/source/copybook
   $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/COPYBOOK.COMMON:$SOURCECPY/COPYBOOK.CICS:$SOURCECPY/COPYBOOK.DDL:$SOURCECPY/COPYBOOK.UPDATED:$SOURCECPY/MSTR.COPYLIB:$SOURCECPY/COPYBOOK.MSTRTSS:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTR:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTRBDS
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
   ?day_of_week = grep -a "FROM DAY-OF-WEEK" $OF_COMPILE_IN
   ?online = grep -av "^......\*" $OF_COMPILE_BASE.ofcbpp | grep -a "EXEC.*CICS"
@@ -551,8 +560,7 @@ workdir = $COMPILE_WORK_DIR
 $SOURCEMACROS = /opt/source/MACROS
 $OFASM_MACLIB = $OFASM_HOME/maclib/ofmac:$SOURCEMACROS/maclib_38:$SOURCEMACROS/MACROS.CICS:$SOURCEMACROS/MACROS.COMMON:$SOURCEMACROS/MODIFIED.MACROS.CICS:$SOURCEMACROS/MODIFIED.MACROS.COMMON:$SOURCEMACROS/CICSVS.SOFT.MACLIB:$SOURCEMACROS/MACROS.SOFTQPR30
 
-# Filter variables
-
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 ?cics = grep -av "\*" $OF_COMPILE_IN | grep -a "EXEC[]*CICS"
@@ -612,7 +620,7 @@ args = ${OF_COMPILE_BASE}_OFASM_VM_ENTRY.cpp -o $OF_COMPILE_BASE.so -m32 -shared
 
 This profile is the advanced profile, there are 16 sections:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -649,7 +657,9 @@ This profile use an additional script: [create_json.sh](../additional_scripts/cr
   [setup]
   workdir = /opt/tmaxapp/compile
 
-  # Filter variables
+  # Filter functions
+  # If you want to manually test the filters, you can add to the first grep the
+  # following options: -nH --color=always
   ?cics = grep -av "^\*|^\.\*" $OF_COMPILE_IN | grep -a "EXEC.*CICS"
 
   [ofasmpp?cics]
@@ -684,7 +694,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -712,7 +722,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -740,7 +750,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -769,7 +779,7 @@ workdir = $COMPILE_WORK_DIR
 # Environment variables
 $pgm = $(echo $OF_COMPILE_IN | cut -d'_' -f 1)
 
-# Filter variables
+# Filter functions
 
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
@@ -808,7 +818,7 @@ dataset = SYS1.USERLIB
 
 There are 6 sections in this profile:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -839,7 +849,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -867,7 +877,7 @@ dataset = SYS1.USERLIB
 
 There are 4 sections in this profile:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -894,7 +904,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -921,7 +931,7 @@ dataset = SYS1.USERLIB
 
 There are 4 sections in this profile:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -948,7 +958,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -976,7 +986,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -1001,7 +1011,7 @@ workdir = $COMPILE_WORK_DIR
 #workdir = /opt/tmaxapp/compile
 #workdir = /opt/tmaxapp/compile/bms_maps
 
-# Filter variables
+# Filter functions
 
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
@@ -1051,7 +1061,7 @@ args = $OF_COMPILE_IN
 
 There are 8 sections in this profile:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -1086,7 +1096,7 @@ This profile use an additional script: [deploy_map.sh](../additional_scripts/dep
 
   # Environment variables
 
-  # Filter variables
+  # Filter functions
 
   [mscasmc]
   $OF_COMPILE_OUT = OF_COMPILE_BASE.atm
@@ -1116,7 +1126,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -1140,7 +1150,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -1168,7 +1178,7 @@ workdir = $COMPILE_WORK_DIR
 # Environment variables
 $SOURCE_EASYTRIEVE = /opt/source/EASYTRIEVE/EASYPLUS
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 
@@ -1194,7 +1204,7 @@ args = -i $OF_COMPILE_IN -l $SOURCE_EASYTRIEVE
 
 There are 4 sections in this profile:
 
-- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter variables that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter variable (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter variable name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter variable.
+- `[setup]` section: mandatory section to specify the working directory. It is also interesting to specify in this section all the environment and filter functions that are going to be used in the profile. At the time oftools_compile reads an environment variable (denoted with a `$`), it captures its value and execute the corresponding command. And this is possible to use an environment variable to define another, as it is used in this profile. For a filter function (denoted with a `?`), this is different: oftools_compile only stores in its memory the filter function name and value, and executes it only when it appears in one of the following sections' name. These filters are grep commands that will be executed before a section is executed. If the grep command receives a match, the return code will be set to 0 which will trigger the section using the filter function.
   
 - `[dos2unix]` section: just in case the program being compiled has been manipulated/developed on Windows before uploading and compiling in the Linux environment, it is interesting to have a [dos2unix](https://linux.die.net/man/1/dos2unix) command to converts plain text files in DOS/MAC format to UNIX format. And more specifically change the line termination character, from CRLF to LF.
   
@@ -1221,7 +1231,7 @@ workdir = $COMPILE_WORK_DIR
 
 # Environment variables
 
-# Filter variables
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 

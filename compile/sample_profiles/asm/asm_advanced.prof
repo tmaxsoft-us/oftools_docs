@@ -8,8 +8,7 @@ workdir = $COMPILE_WORK_DIR
 $SOURCEMACROS = /opt/source/MACROS
 $OFASM_MACLIB = $OFASM_HOME/maclib/ofmac:$SOURCEMACROS/maclib_38:$SOURCEMACROS/MACROS.CICS:$SOURCEMACROS/MACROS.COMMON:$SOURCEMACROS/MODIFIED.MACROS.CICS:$SOURCEMACROS/MODIFIED.MACROS.COMMON:$SOURCEMACROS/CICSVS.SOFT.MACLIB:$SOURCEMACROS/MACROS.SOFTQPR30
 
-# Filter variables
-
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 ?cics = grep -av "\*" $OF_COMPILE_IN | grep -a "EXEC[]*CICS"

@@ -8,8 +8,7 @@ workdir = $COMPILE_WORK_DIR
 $SOURCECPY = /opt/source/copybook
 $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/COPYBOOK.COMMON:$SOURCECPY/COPYBOOK.CICS:$SOURCECPY/COPYBOOK.DDL:$SOURCECPY/COPYBOOK.UPDATED:$SOURCECPY/MSTR.COPYLIB:$SOURCECPY/COPYBOOK.MSTRTSS:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTR:/opt/source/MAPSETS/MAPSET.COPYBOOK.MSTRBDS
 
-# Filter variables
-
+# Filter functions
 # If you want to manually test the filters, you can add to the first grep the
 # following options: -nH --color=always
 ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"

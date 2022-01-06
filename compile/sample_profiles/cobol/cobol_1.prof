@@ -6,7 +6,7 @@ $SYSVOL = /opt/tmaxapp/OpenFrame/volume/SYSVOL
 $DB2INCLUDE = $SYSVOL/DB2.INCLUDE:$SYSVOL/DB2.INCLUDE2
 $OFCOBCPY = $OFCOBCPY:$SYSVOL/OFRAME.COPYLIB:$SYSVOL/OFRAME.DCLGNLIB:$DB2INCLUDE
 
-# Filter variables
+# Filter functions
 ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
 ?sqlca  = grep -av "^......\*" $OF_COMPILE_IN | grep -a "01.* SQLCA "
 

@@ -5,7 +5,7 @@ workdir = /opt2/tmaxapp/compile
 $SOURCECPY = /opt2/tmaxwork/WORK/conv/copybook
 $OFCOBCPY = $OFCOBCPY:$OFCOB_HOME/copybook:$OPENFRAME_HOME/osc/copybook:$OPENFRAME_HOME/osc/region/OSCOIVP1/map/symbolic:$SOURCECPY/db:$SOURCECPY/fixedcopy:$SOURCECPY/rdbms:$SOURCECPY/ws-copy:$SOURCECPY/map:$SOURCECPY/msg:$SOURCECPY/pd:$TB_HOME/client/include:/opt2/tmaxwork/demosrc/copybook:/opt2/tmaxwork/YSW/NEXT_VALUE_FOR_20210218
 
-# Filter variables
+# Filter functions
 ?cics = grep -av "^......\*" $OF_COMPILE_IN | grep -aE "EXEC.*CICS|USING.*DFHEIBLK|USING.*DFHCOMMAREA"
 ?rw = grep -av "^......\*" $OF_COMPILE_IN | grep -a "REPORT" | grep -aE "SECTION|ARE" | grep -av "-"
 ?sql = grep -av "^......\*" $OF_COMPILE_IN | grep -a "EXEC.*SQL"
