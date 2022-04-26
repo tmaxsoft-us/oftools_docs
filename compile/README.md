@@ -10,11 +10,13 @@
   * [3.3 Deploy Division](#33-deploy-division)
   * [3.4 Environment variable](#34-environment-variable)
   * [3.5 Filter function](#35-filter-function)
-* [4. Outputs](#4-outputs)
-  * [4.1 Work Directory](#41-work-directory)
-  * [4.2 Log File](#42-log-file)
-  * [4.3 Grouping Option](#43-grouping-option)
-  * [4.4 Report File](#44-report-file)
+* [4. Inputs](#4-inputs)
+  * [4.1 Source](#41-source)
+* [5. Outputs](#5-outputs)
+  * [5.1 Work Directory](#51-work-directory)
+  * [5.2 Log File](#52-log-file)
+  * [5.3 Grouping Option](#53-grouping-option)
+  * [5.4 Report File](#54-report-file)
 
 <div style="page-break-after: always;"></div>
 
@@ -31,28 +33,32 @@ oftools_compile -p <path_to_profile> -s <path_to_source> [options]
 ```
 
 ```bash
-usage: oftools_compile -p PROFILE -s SOURCE [-c] [-g] [-l LEVEL] [--skip]
+usage: oftools_compile -p FILENAME -s SOURCE [-c] [-g] [-l LEVEL] [--skip]
                        [-t TAG] [-h] [-v]
 
 OpenFrame Tools Compile
 
 Required arguments:
-  -p PROFILE, --profile PROFILE
-                        name of the profile, contains the description of the
-                        compilation target
+  -p FILENAME, --profile FILENAME
+                        profile name, contains the description of the compilation target
   -s SOURCE, --source SOURCE
-                        name of the source, either a file or a directory
+                        source name, currently supported:
+                        - file or a directory
+                        - colon-separated list of files of directories
+                        - text file containing a list of files or directories
 
 Optional arguments:
   -c, --clear           clear all the files generated during compilation
-  -g, --grouping        put all the compilation folders in a single one for
-                        mass compilation and aggregate all the logs
+  -g, --grouping        put all the compilation directories in a single one and aggregate all the logs
   -l LEVEL, --log-level LEVEL
-                        set log level, potential values: DEBUG, INFO, WARNING,
-                        ERROR, CRITICAL. (default: INFO)
-  --skip                set skip flag, used to skip source files if not found
-  -t TAG, --tag TAG     add a tag to the name of the report file and the
-                        listing directory
+                        set log level, potential values:
+                        - DEBUG
+                        - INFO (default)
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
+  --skip                skip source files if not found
+  -t TAG, --tag TAG     add a tag to the name of the report file and the compilation directory
 
 Help & version:
   -h, --help            show this help message and exit
@@ -74,10 +80,14 @@ The environment and the filter functions are allowed to be defined in any of the
 The **setup** division allows to define one `[setup]` section only. In the `[setup]` section, here are the available options:
 
 - 'workdir' option is required. This option is the absolute path to the working directory which oftools_compile uses during the entire build process and where the files resulting of the compilation go. It can be defined using environment variables.
-  
+
 - 'mandatory' option is optional. This option is the list of section that must be run at some point through the program execution, colon separated.
-  
-- as any other section, the `[setup]` section accepts environment and filter functions definitions.
+
+- 'backup' option is optional. This option in an integer that specify the maximum number of working directories that must be kept for a given program. Let's say for example that a program SAMPLE.cbl has been compiled 10 times, there is then 10 working directories for this program. Adding the option backup = 3 to the profile will then delete the 7 oldest working directories to bring it down to 3.
+
+- 'housekeeping' option is optional. This option is a number of days that specify the expiration date of the working directories. This option does required the 'backup' option to be specified as well. Let's say for example that a program SAMPLE.cbl has been compiles 5 times, there is then 5 working directories for this program and 2 of these are older than 30 days. Adding backup = 2 and housekeeping = 30d will then delete the two oldest working directories to bring it down to 3. But adding backup = 4 and housekeeping = 30d will then delete the only the oldest working directory to bring it down to 4, even if there are technically two directories older than 30 days. Basically, the 'backup' option set the minimum threshold for housekeeping deletion.
+
+- as any other section, the `[setup]` section accepts environment variables and filter functions definitions.
 
 ![alt-text](./reference_images/3_profile_setup_division.png)
 
@@ -89,7 +99,7 @@ For any section of the **execute** division, here are the available options:
 
 - 'args': for instance, if you define a section as `[ofcbpp]`, with 'args' defined as `-i $OF_COMPILE_IN -o $OF_COMPILE_OUT`, then the Linux command `ofcbpp -i $OF_COMPILE_IN -o $OF_COMPILE_OUT` will be executed.
 
-- as any other section, a section of the **execute** division accepts environment and filter functions definitions.
+- as any other section, a section of the **execute** division accepts environment variables and filter functions definitions.
 
 ![alt-text](./reference_images/4_profile_execute_division.png)
 
@@ -100,23 +110,23 @@ The **deploy** division is for defining how the compiled program gets deployed i
 In a `[deploy]` section, there are four different types of options that you can define:
 
 1. **file**
-    - Name of the file that needs to be deployed.
-    - Required: yes
-    - Internally, the `$OF_COMPILE_IN` of the `[deploy]` section will be copied into the file name specified.
+   - Name of the file that needs to be deployed.
+   - Required: yes
+   - Internally, the `$OF_COMPILE_IN` of the `[deploy]` section will be copied into the file name specified.
 2. **dataset**
-    - Name of the target dataset that the file needs to be deployed to.
-    - Required: no
-    - Internally, it will trigger `dlupdate` command to deploy the file to the dataset.
+   - Name of the target dataset that the file needs to be deployed to.
+   - Required: no
+   - Internally, it will trigger `dlupdate` command to deploy the file to the dataset.
 3. **region**
-    - Name of the osc region name which the file needs to be deployed to.
-    - Required: no
-    - Internally, it will trigger `osctdlupdate` command to deploy the file to the osc tdl library.
+   - Name of the osc region name which the file needs to be deployed to.
+   - Required: no
+   - Internally, it will trigger `osctdlupdate` command to deploy the file to the osc tdl library.
 4. **tdl**
-    - Name of the tdl library path which the file needs to be deployed to.
-    - Required: no
-    - Internally, it will trigger `tdlupdate` command to deploy the file to the tdl library.
+   - Name of the tdl library path which the file needs to be deployed to.
+   - Required: no
+   - Internally, it will trigger `tdlupdate` command to deploy the file to the tdl library.
 
-- as any other section, a section of the **deploy** division accepts environment and filter functions definitions.
+- as any other section, a section of the **deploy** division accepts environment variables and filter functions definitions.
 
 ![alt-text](./reference_images/5_profile_deploy_division.png)
 
@@ -125,17 +135,17 @@ In a `[deploy]` section, there are four different types of options that you can 
 An environment variable can be defined by adding `$` as a prefix to the name of an option. This environment variable is equivalent to an environment variable that is being used in the Linux system. There are pre-defined environment variables that oftools_compile uses which are `$OF_COMPILE_IN`, `$OF_COMPILE_OUT`, and `$OF_COMPILE_BASE`.
 
 1. **$OF_COMPILE_IN**
-    - Holds the input file name of the given section.
-    - This value gets automatically updated by previous section's `$OF_COMPILE_OUT` value at the time the given section gets initialized.
-    - This can be overridden by defining `$OF_COMPILE_IN` in the given section.
+   - Holds the input file name of the given section.
+   - This value gets automatically updated by previous section's `$OF_COMPILE_OUT` value at the time the given section gets initialized.
+   - This can be overridden by defining `$OF_COMPILE_IN` in the given section.
 2. **$OF_COMPILE_OUT**
-    - Holds the output file name of the given section.
-    - This value gets automatically updated by replacing the extension of `$OF_COMPILE_IN` to current section name (without filters if any) at the time the given section gets initialized.
-    - This can be overridden by defining `$OF_COMPILE_OUT` in the given section.
+   - Holds the output file name of the given section.
+   - This value gets automatically updated by replacing the extension of `$OF_COMPILE_IN` to current section name (without filters if any) at the time the given section gets initialized.
+   - This can be overridden by defining `$OF_COMPILE_OUT` in the given section.
 3. **$OF_COMPILE_BASE**
-    - Holds the `$OF_COMPILE_IN` value without extension.
-    - This value gets automatically updated by removing extension of `$OF_COMPILE_IN` at the time the given section gets initialized.
-    - This can be overridden by defining `$OF_COMPILE_BASE` in the given section.
+   - Holds the `$OF_COMPILE_IN` value without extension.
+   - This value gets automatically updated by removing extension of `$OF_COMPILE_IN` at the time the given section gets initialized.
+   - This can be overridden by defining `$OF_COMPILE_BASE` in the given section.
 
 ### 3.5 Filter function
 
@@ -153,25 +163,69 @@ Profile example:
 
 <div style="page-break-after: always;"></div>
 
-## 4. Outputs
+## 4. Inputs
 
-### 4.1 Work Directory
+### 4.1 Source
+
+It is possible to specify the source of oftools_compile in different ways:
+
+- path to a file
+
+```text
+SAMPLE.cbl
+```
+
+- path to a directory
+
+```text
+path/to/directory/
+```
+
+- colon-separated list of files
+
+```text
+SAMPLE1.cbl:SAMPLE2.cbl
+```
+
+- colon-separated list of directories
+
+```text
+path/to/directory1:path/to/directory2
+```
+
+- text file containing a list of files, one per line
+
+```text
+SAMPLE1.cbl
+SAMPLE2.cbl
+```
+
+- text file containing a list of directories, one per line
+
+```text
+path/to/directory1
+path/to/directory2
+```
+
+## 5. Outputs
+
+### 5.1 Work Directory
 
 The 'workdir' option is set to a working directory where the log, report, and intermediate files of the compilation get stored. There are two different types of directory inside the workdir.
 
 1. **report**
-    - The report file, formatted as a CSV, is located in this folder.
-    - Each report file has a time stamp in the file name to tell us when the file got created.
+   - The report file, formatted as a CSV, is located in this folder.
+   - Each report file has a time stamp in the file name to tell us when the file got created.
 2. **file name with a time stamp and a default tag**
-    - For each compiling source, a dedicated folder is created as `PROGRAMNAME_<tag>_YYYYMMDD_HHMMSS`, where by default **tag** is the logname of the user running the `oftools_compile` command.
-    - In this folder, you can see the _oftools_compile.log_ file that describes what sections and commands were executed.
-    - Also, you may see intermediate files here if they got generated during the execution of the sections.
+   - For each compiling source, a dedicated folder is created as `PROGRAMNAME_<tag>_YYYYMMDD_HHMMSS`, where by default **tag** is the logname of the user running the `oftools_compile` command.
+   - In this folder, you can see the _oftools_compile.log_ file that describes what sections and commands were executed.
+   - Also, you may see intermediate files here if they got generated during the execution of the sections.
 
 Here is an example of what the working directory, created for the compilation of the **sample.cob** program, would look like:
 
 ![alt-text](./reference_images/7_working_directory.png)
 
-### 4.2 Log File
+### 5.2 Log File
 
 The log file stores information about which commands were executed. Here is a snippet of what it would look like:
 
@@ -188,9 +242,9 @@ It is possible to get more details about the execution of `oftools_compile` with
 
 ![alt-text](./reference_images/9_compilation_log_file_debug_level.png)
 
-### 4.3 Grouping Option
+### 5.3 Grouping Option
 
-If the **grouping** option is used with the execution of oftools_compile (recommended when performing mass compilation), all the work directories created for each program are moved under a folder named as `group_<tag>_YYYYMMDD_HHMMSS`. Moreover, this option concatenates all _oftools_compile.log_ files in one _group.log_ for easy analysis if some errors occur during compilation.
+If the **grouping** option is used with the execution of oftools*compile (recommended when performing mass compilation), all the work directories created for each program are moved under a folder named as `group*<tag>_YYYYMMDD_HHMMSS`. Moreover, this option concatenates all \_oftools_compile.log_ files in one _group.log_ for easy analysis if some errors occur during compilation.
 
 See below example where the tag is the result of the `logname` command:
 
@@ -198,17 +252,17 @@ See below example where the tag is the result of the `logname` command:
 
 When you compile multiple programs at the same time using a directory as a source parameter, it is recommended to specify the language used in the **tag** option for tracking purposes. If all programs in your directory are COBOL programs, you should specify a tag like `COBOL_username` for instance.
 
-### 4.4 Report File
+### 5.4 Report File
 
 The report file is formatted as a CSV, a comma delimited file, that displays:
 
--   the count of the programs
--   the name of the source code (absolute path),
--   the directory for the listing files,
--   whether the last section executed was successful or not,
--   the return code of the compilation,
--   the last section executed,
--   and the amount of time it took to complete compilation.
+- the count of the programs
+- the name of the source code (absolute path),
+- the directory for the listing files,
+- whether the last section executed was successful or not,
+- the return code of the compilation,
+- the last section executed,
+- and the amount of time it took to complete compilation.
 
 By utilizing this file, you will be able to understand which program has failed and in which exact step it failed.
 
