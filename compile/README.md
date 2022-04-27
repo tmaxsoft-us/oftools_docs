@@ -12,11 +12,13 @@
   * [3.5 Filter function](#35-filter-function)
 * [4. Inputs](#4-inputs)
   * [4.1 Source](#41-source)
-* [5. Outputs](#5-outputs)
-  * [5.1 Work Directory](#51-work-directory)
-  * [5.2 Log File](#52-log-file)
-  * [5.3 Grouping Option](#53-grouping-option)
-  * [5.4 Report File](#54-report-file)
+* [5. Execution](#5-execution)
+  * [5.1 Interruption](#51-interruption)
+* [6. Outputs](#6-outputs)
+  * [6.1 Work Directory](#61-work-directory)
+  * [6.2 Log File](#62-log-file)
+  * [6.3 Grouping Option](#63-grouping-option)
+  * [6.4 Report File](#64-report-file)
 
 <div style="page-break-after: always;"></div>
 
@@ -207,9 +209,17 @@ path/to/directory1
 path/to/directory2
 ```
 
-## 5. Outputs
+## 5. Execution
 
-### 5.1 Work Directory
+### 5.1 Interruption
+
+While oftools_compile is running, there are two ways to interrupt it:
+
+- **Ctrl + C**: if you press these two keys, the program is going to interrupt the current file processing, and it is going to proceed to the next file. This refers to the signal SIGINT.
+- **Ctrl + \\**: if you press these two keys, the program is going to not only interrupt the current file processing but the entire execution of oftools_compile. This refers to the signal SIGQUIT.
+## 6. Outputs
+
+### 6.1 Work Directory
 
 The 'workdir' option is set to a working directory where the log, report, and intermediate files of the compilation get stored. There are two different types of directory inside the workdir.
 
@@ -225,7 +235,7 @@ Here is an example of what the working directory, created for the compilation of
 
 ![alt-text](./reference_images/7_working_directory.png)
 
-### 5.2 Log File
+### 6.2 Log File
 
 The log file stores information about which commands were executed. Here is a snippet of what it would look like:
 
@@ -242,7 +252,7 @@ It is possible to get more details about the execution of `oftools_compile` with
 
 ![alt-text](./reference_images/9_compilation_log_file_debug_level.png)
 
-### 5.3 Grouping Option
+### 6.3 Grouping Option
 
 If the **grouping** option is used with the execution of oftools*compile (recommended when performing mass compilation), all the work directories created for each program are moved under a folder named as `group*<tag>_YYYYMMDD_HHMMSS`. Moreover, this option concatenates all \_oftools_compile.log_ files in one _group.log_ for easy analysis if some errors occur during compilation.
 
@@ -252,7 +262,7 @@ See below example where the tag is the result of the `logname` command:
 
 When you compile multiple programs at the same time using a directory as a source parameter, it is recommended to specify the language used in the **tag** option for tracking purposes. If all programs in your directory are COBOL programs, you should specify a tag like `COBOL_username` for instance.
 
-### 5.4 Report File
+### 6.4 Report File
 
 The report file is formatted as a CSV, a comma delimited file, that displays:
 
