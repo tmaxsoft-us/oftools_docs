@@ -32,6 +32,8 @@
 
 **OpenFrame Tools Dataset Migration** or **oftools_dsmigin** is a tool designed to manage the download and migration of datasets from a Mainframe environment to a Linux system with OpenFrame.
 
+![alt-text](./reference_images/1_overview.png)
+
 ## 2. Usage
 
 ```bash
