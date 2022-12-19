@@ -141,6 +141,23 @@ Please note that you will need to have all the required installers in the same f
 For example, below are the installers needed for oftools_compile-1.3.6.
 
 ```
-oftools_compile-1.3.6-py3-none-any.whl  setuptools_scm-6.3.2-py3-none-any.whl  versioneer-0.22-py3-none-any.whl
-setuptools-57.5.0-py3-none-any.whl      tomli-1.2.3-py3-none-any.whl           wheel-0.37.1-py2.py3-none-any.whl
+attrs (22.1.0)
+coverage (6.2)
+importlib-metadata (4.8.3)
+iniconfig (1.1.1)
+oftools-compile (1.3.6)
+packaging (21.3)
+pbr (5.11.0)
+pip (9.0.3)
+pluggy (1.0.0)
+py (1.11.0)
+pyparsing (3.0.9)
+pytest (7.0.1)
+setuptools (39.2.0)
+setuptools-scm (6.4.2)
+tomli (1.2.3)
+typing-extensions (4.1.1)
+versioneer (0.22)
+wheel (0.37.1)
+zipp (3.6.0)
 ```
