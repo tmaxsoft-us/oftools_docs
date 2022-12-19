@@ -137,7 +137,7 @@ pip3 install --user --no-index --find-links . oftools_compile-1.3.6-py3-none-any
 sudo pip3 install --no-index --find-links . oftools_compile-1.3.6-py3-none-any.whl
 ```
 
-Please note that you will need to have all the required libraries in the same folder.
+Please note that you will need to have all the required installers in the same folder.
 For example, below are the installers needed for oftools_compile-1.3.6.
 
 ```
