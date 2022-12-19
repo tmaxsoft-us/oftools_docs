@@ -131,8 +131,16 @@ su - oframe
 # <enter password>
 
 # Local install, just for oframe user
-pip3 install --user --no-index --find-links . oftools-compile-1.2.1.dev9.tar.gz
+pip3 install --user --no-index --find-links . oftools_compile-1.3.6-py3-none-any.whl
 
 # Global install
-sudo pip3 install --no-index --find-links . oftools-compile-1.2.1.dev9.tar.gz
+sudo pip3 install --no-index --find-links . oftools_compile-1.3.6-py3-none-any.whl
+```
+
+Please note that you will need to have all the required libraries in the same folder.
+For example, below are the installers needed for oftools_compile-1.3.6.
+
+```
+oftools_compile-1.3.6-py3-none-any.whl  setuptools_scm-6.3.2-py3-none-any.whl  versioneer-0.22-py3-none-any.whl
+setuptools-57.5.0-py3-none-any.whl      tomli-1.2.3-py3-none-any.whl           wheel-0.37.1-py2.py3-none-any.whl
 ```
