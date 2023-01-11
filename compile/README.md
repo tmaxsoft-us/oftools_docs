@@ -148,6 +148,8 @@ An environment variable can be defined by adding `$` as a prefix to the name of 
    - Holds the `$OF_COMPILE_IN` value without extension.
    - This value gets automatically updated by removing extension of `$OF_COMPILE_IN` at the time the given section gets initialized.
    - This can be overridden by defining `$OF_COMPILE_BASE` in the given section.
+4. **$OF_COMPILE_SOURCE** (v1.3.7 or higher)
+   - Holds the string passed through -s option.
 
 ### 3.5 Filter function
 
